@@ -63,7 +63,7 @@ Public Class frmMain
             End If
 
             'Connect to RightFax Server
-            Dim objRightFax As FaxServer
+            Dim objRightFax As New FaxServer
             Try
                 objRightFax = ConnectToServer(strServerName, strUserName, False)
                 objRightFax.OpenServer()
@@ -103,6 +103,7 @@ Public Class frmMain
                         objFax.Attachments.Add(strAttachment, False) ' false = don't delete file after faxing
                         SendFax(objFax)
                     Next
+
                 Catch ex As Exception
                     MsgBox("Error creating or sending fax. " + ex.Message)
                     Reset_UI()
@@ -117,6 +118,7 @@ Public Class frmMain
 
             'Close Server
             objRightFax.CloseServer()
+            objRightFax = Nothing
 
             'Reset UI and show done.
             Reset_UI()
@@ -150,6 +152,12 @@ Public Class frmMain
     End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'Load Settings
+        txtRFsvr.Text = My.Settings.Server
+        txtRFuser.Text = My.Settings.User
+        txtRFRecName.Text = My.Settings.RecipientName
+        txtRFRecFax.Text = My.Settings.RecipientFax
+
         attachments = New List(Of String)
         Reset_UI()
     End Sub
